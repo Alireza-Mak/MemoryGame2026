@@ -8,39 +8,48 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var img = ["sun.max","cloud.sun","cloud.rain"]
-    @State private var stage:Int = 0
-    @State private var selectedPhoto: String = ""
+    private let images = ["sun.max", "cloud.sun", "cloud.rain"]
+    @State private var index: Int = 0
+
     var body: some View {
-        HStack {
+        HStack(spacing: 16) {
             Image(systemName: "arrowtriangle.left")
                 .resizable()
-                .foregroundStyle(.tint)
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 50, height: 50)
-                .onTapGesture {
-                    stage = stage == 0 ? img.count - 1 : stage - 1
-                }
+                .frame(width: 44, height: 44)
+                .foregroundStyle(.tint)
+                .accessibilityLabel("Previous image")
+                .onTapGesture { showPrevious() }
 
-            Image(systemName: img[stage])
+            Image(systemName: images[index])
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .foregroundStyle(.black)
-                .padding(25)
-            
+                .foregroundStyle(.primary)
+                .frame(maxWidth: 200, maxHeight: 200)
+                .padding(24)
+                .accessibilityLabel(images[index])
+
             Image(systemName: "arrowtriangle.right")
                 .resizable()
-                .foregroundStyle(.tint)
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 50, height: 50)
-                .onTapGesture {
-                    stage = (stage + 1) % img.count
-                }
+                .frame(width: 44, height: 44)
+                .foregroundStyle(.tint)
+                .accessibilityLabel("Next image")
+                .onTapGesture { showNext() }
         }
         .padding()
-        HStack{
-           Text(img[stage])
-        }
+
+        Text(images[index])
+            .font(.headline)
+            .padding(.bottom)
+    }
+
+    private func showPrevious() {
+        index = index == 0 ? images.count - 1 : index - 1
+    }
+
+    private func showNext() {
+        index = (index + 1) % images.count
     }
 }
 
