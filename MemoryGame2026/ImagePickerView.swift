@@ -10,7 +10,7 @@ struct ImagePickerView: View {
     @Binding var index: Int
     let images: [String]
     var body: some View {
-        HStack() {
+        HStack(spacing:100) {
             Image(systemName: "arrowtriangle.left")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -23,9 +23,7 @@ struct ImagePickerView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .foregroundStyle(.primary)
-                .frame(maxWidth: 100, maxHeight: 100)
-                .padding(.vertical, 20)
-                .padding(.horizontal, 70)
+                .frame(width: 100, height: 100)
                 .accessibilityLabel(images[index])
 
             Image(systemName: "arrowtriangle.right")
@@ -36,7 +34,6 @@ struct ImagePickerView: View {
                 .accessibilityLabel("Next image")
                 .onTapGesture { showNext() }
         }
-        .padding()
     }
     
     private func showPrevious() {

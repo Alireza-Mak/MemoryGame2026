@@ -12,7 +12,7 @@ struct ContentView: View {
     @AppStorage("index") private var index: Int = 0
     @AppStorage("step") private var step: Int = 7
     @AppStorage("bouns") private var bouns: Bool = true
-    @State private var showingSettings: Bool = false
+    @State private var showingSettings: Bool = true
     
 
     var body: some View {
