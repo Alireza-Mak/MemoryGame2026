@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var images = ["sun.max", "cloud.sun", "cloud.rain"]
-    @State private var index: Int = 0
-    @State private var step: Int = 7
-    @State private var bouns: Bool = true
+    @State private var images: [String]  = ["sun.max", "cloud.sun", "cloud.rain"]
+    @AppStorage("index") private var index: Int = 0
+    @AppStorage("step") private var step: Int = 7
+    @AppStorage("bouns") private var bouns: Bool = true
 
     var body: some View {
         VStack(spacing: 20){
