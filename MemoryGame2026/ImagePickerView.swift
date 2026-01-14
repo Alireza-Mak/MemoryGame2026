@@ -7,8 +7,8 @@
 import SwiftUI
 
 struct ImagePickerView: View {
-   @Binding var index: Int
-    @Binding var images: [String]
+    @Binding var index: Int
+    let images: [String]
     var body: some View {
         HStack() {
             Image(systemName: "arrowtriangle.left")
