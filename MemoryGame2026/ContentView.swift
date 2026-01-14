@@ -8,30 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
-    private let images: [String]  = ["sun.max", "cloud.sun", "cloud.rain"]
+    private static let images: [String] = ["sun.max", "cloud.sun", "cloud.rain"]
     @AppStorage("index") private var index: Int = 0
     @AppStorage("step") private var step: Int = 7
-    @AppStorage("bouns") private var bouns: Bool = true
-    @State private var showingSettings: Bool = true
+    @AppStorage("bonus") private var bonus: Bool = true
+    @State private var showingSettings: Bool = false
     
 
     var body: some View {
         NavigationStack {
-            Group{
+            Group {
                 if showingSettings {
-                    SettingsView( bouns: $bouns, index: $index, step: $step, images: images)
-                }else{
-                    GameView(name: images[index])
+                    SettingsView(bonus: $bonus, index: $index, step: $step, images: Self.images)
+                } else {
+                    GameView(name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark")
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing){
-                    Button{
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
                         showingSettings.toggle()
-                    }label: {
+                    } label: {
                         Image(systemName: showingSettings ? "house" : "gear")
-                            .resizable()
-                            .frame(width: 40, height: 35)
+                            .font(.title2)
                     }
                 }
             }

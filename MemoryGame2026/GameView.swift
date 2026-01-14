@@ -6,14 +6,20 @@
 //
 import SwiftUI
 
-struct GameView : View{
+struct GameView: View {
     let name: String
     
-    var body:some View{
+    var body: some View {
         Image(systemName: name)
             .resizable()
-            .accessibilityLabel(name)
+            .symbolRenderingMode(.hierarchical)
+            .accessibilityLabel(Text(name))
             .aspectRatio(contentMode: .fit)
             .padding(.horizontal, 25)
     }
 }
+#Preview("GameView") {
+    GameView(name: "sun.max")
+        .padding()
+}
+

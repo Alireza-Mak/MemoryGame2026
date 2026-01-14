@@ -10,29 +10,36 @@ struct ImagePickerView: View {
     @Binding var index: Int
     let images: [String]
     var body: some View {
-        HStack(spacing:100) {
-            Image(systemName: "arrowtriangle.left")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 44, height: 44)
-                .foregroundStyle(.tint)
-                .accessibilityLabel("Previous image")
-                .onTapGesture { showPrevious() }
+        HStack(spacing: 70) {
+            Button(action: showPrevious) {
+                Image(systemName: "arrowtriangle.left.fill")
+                    .resizable()
+                    .symbolRenderingMode(.hierarchical)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 44, height: 44)
+            }
+            .accessibilityLabel("Previous image")
+            .buttonStyle(.plain)
+            .foregroundStyle(.tint)
 
-            Image(systemName: images[index])
+            Image(systemName: images.indices.contains(index) ? images[index] : images.first ?? "questionmark")
                 .resizable()
+                .symbolRenderingMode(.monochrome)
                 .aspectRatio(contentMode: .fit)
                 .foregroundStyle(.primary)
-                .frame(width: 100, height: 100)
-                .accessibilityLabel(images[index])
+                .frame(width: 150, height: 150)
+                .accessibilityLabel(images.indices.contains(index) ? images[index] : (images.first ?? "Image"))
 
-            Image(systemName: "arrowtriangle.right")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 44, height: 44)
-                .foregroundStyle(.tint)
-                .accessibilityLabel("Next image")
-                .onTapGesture { showNext() }
+            Button(action: showNext) {
+                Image(systemName: "arrowtriangle.right.fill")
+                    .resizable()
+                    .symbolRenderingMode(.hierarchical)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 44, height: 44)
+            }
+            .accessibilityLabel("Next image")
+            .buttonStyle(.plain)
+            .foregroundStyle(.tint)
         }
     }
     
@@ -45,3 +52,8 @@ struct ImagePickerView: View {
     }
 }
 
+#Preview("ImagePickerView") {
+    @State var idx = 0
+    return ImagePickerView(index: .constant(idx), images: ["sun.max", "cloud.sun", "cloud.rain"]) 
+        .padding()
+}

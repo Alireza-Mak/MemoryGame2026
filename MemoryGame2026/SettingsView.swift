@@ -6,25 +6,32 @@
 //
 import SwiftUI
 
-struct SettingsView : View{
- 
-    @Binding var bouns:Bool
-    @Binding var index:Int
-    @Binding var step:Int
+struct SettingsView: View {
+
+    @Binding var bonus: Bool
+    @Binding var index: Int
+    @Binding var step: Int
     let images: [String]
-    
+
     var body: some View {
-        
-        
-        VStack(spacing: 20){
-            ImagePickerView(
-                index: $index,
-                images: images
-            )
-            Stepper(value:$step, in:5...10){Text("\(step) Rows/Cols")}
-            Toggle("Bouns", isOn: $bouns)
+        VStack(spacing: 20) {
+            ImagePickerView(index: $index, images: images)
+            Stepper(value: $step, in: 5...10) {
+                Text("\(step) Rows/Cols")
+                    .accessibilityLabel("Grid size")
+                    .accessibilityValue("\(step) by \(step)")
+            }
+            Toggle("Bonus mode", isOn: $bonus)
         }
-        .padding(30)
-        
+        .navigationTitle("Settings")
+        .padding(20)
     }
 }
+#Preview("SettingsView") {
+    @State var bonus = true
+    @State var index = 0
+    @State var step = 7
+    return SettingsView(bonus: $bonus, index: $index, step: $step, images: ["sun.max", "cloud.sun", "cloud.rain"]) 
+        .padding()
+}
+
