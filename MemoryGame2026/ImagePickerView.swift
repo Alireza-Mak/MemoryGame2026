@@ -54,6 +54,5 @@ struct ImagePickerView: View {
 
 #Preview("ImagePickerView") {
     @State var idx = 0
-    return ImagePickerView(index: .constant(idx), images: ["sun.max", "cloud.sun", "cloud.rain"]) 
-        .padding()
+    return ImagePickerView(index: .constant(idx), images: ["sun.max", "cloud.sun", "cloud.rain"])
 }

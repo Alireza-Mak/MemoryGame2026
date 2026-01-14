@@ -24,14 +24,13 @@ struct SettingsView: View {
             Toggle("Bonus mode", isOn: $bonus)
         }
         .navigationTitle("Settings")
-        .padding(20)
+        .padding(25)
     }
 }
 #Preview("SettingsView") {
     @State var bonus = true
     @State var index = 0
     @State var step = 7
-    return SettingsView(bonus: $bonus, index: $index, step: $step, images: ["sun.max", "cloud.sun", "cloud.rain"]) 
-        .padding()
+    return SettingsView(bonus: $bonus, index: $index, step: $step, images: ["sun.max", "cloud.sun", "cloud.rain"])
 }
 

@@ -20,6 +20,5 @@ struct GameView: View {
 }
 #Preview("GameView") {
     GameView(name: "sun.max")
-        .padding()
 }
 
