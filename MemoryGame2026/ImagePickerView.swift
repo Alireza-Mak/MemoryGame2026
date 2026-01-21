@@ -19,6 +19,7 @@ struct ImagePickerView: View {
                     .frame(width: 44, height: 44)
             }
             .accessibilityLabel("Previous image")
+            .accessibilityIdentifier("PrevImage")
             .buttonStyle(.plain)
             .foregroundStyle(.tint)
 
@@ -29,6 +30,9 @@ struct ImagePickerView: View {
                 .foregroundStyle(.primary)
                 .frame(width: 150, height: 150)
                 .accessibilityLabel(images.indices.contains(index) ? images[index] : (images.first ?? "Image"))
+                .accessibilityIdentifier("targetImage")
+                .accessibilityValue(String(index))
+
 
             Button(action: showNext) {
                 Image(systemName: "arrowtriangle.right.fill")
@@ -38,6 +42,7 @@ struct ImagePickerView: View {
                     .frame(width: 44, height: 44)
             }
             .accessibilityLabel("Next image")
+            .accessibilityIdentifier("NextImage")
             .buttonStyle(.plain)
             .foregroundStyle(.tint)
         }

@@ -16,13 +16,19 @@ struct SettingsView: View {
     var body: some View {
         VStack(spacing: 20) {
             ImagePickerView(index: $index, images: images)
+            
             Stepper(value: $step, in: 5...10) {
                 Text("\(step) Rows/Cols")
-                    .accessibilityLabel("Grid size")
-                    .accessibilityValue("\(step) by \(step)")
+                .accessibilityIdentifier("SettingsRowsColsText")
+                .accessibilityValue(String(step))
             }
+            .accessibilityIdentifier("SettingsStepper")
+            
             Toggle("Bonus mode", isOn: $bonus)
+                .accessibilityIdentifier("SettingsBonusToggle")
+                .accessibilityValue(String(bonus))
         }
+        
         .navigationTitle("Settings")
         .padding(25)
     }

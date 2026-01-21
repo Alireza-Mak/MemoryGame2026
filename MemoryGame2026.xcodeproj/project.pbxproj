@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F3743FC12F1EA8C40009FB89 /* MemoryGame2026.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = F3743FBC2F1EA6880009FB89 /* MemoryGame2026.xctestplan */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		F3C512F62F103EAA0060DEAA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F3743FBC2F1EA6880009FB89 /* MemoryGame2026.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MemoryGame2026.xctestplan; sourceTree = "<group>"; };
 		F3C512E82F103EA80060DEAA /* MemoryGame2026.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryGame2026.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3C512F52F103EAA0060DEAA /* MemoryGame2026Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemoryGame2026Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3C512FF2F103EAA0060DEAA /* MemoryGame2026UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemoryGame2026UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +80,7 @@
 		F3C512DF2F103EA80060DEAA = {
 			isa = PBXGroup;
 			children = (
+				F3743FBC2F1EA6880009FB89 /* MemoryGame2026.xctestplan */,
 				F3C512EA2F103EA80060DEAA /* MemoryGame2026 */,
 				F3C512F82F103EAA0060DEAA /* MemoryGame2026Tests */,
 				F3C513022F103EAA0060DEAA /* MemoryGame2026UITests */,
@@ -226,6 +232,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3743FC12F1EA8C40009FB89 /* MemoryGame2026.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

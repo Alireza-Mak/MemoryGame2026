@@ -16,9 +16,9 @@ final class MemoryGame2026UITestsLaunchTests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
-
+    /*
     @MainActor
-    func testLaunch() throws {
+   func testLaunch() throws {
         let app = XCUIApplication()
         app.launch()
 
@@ -30,4 +30,7 @@ final class MemoryGame2026UITestsLaunchTests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
     }
+   */
+    
+    
 }

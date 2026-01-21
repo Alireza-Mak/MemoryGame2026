@@ -16,6 +16,9 @@ struct GameView: View {
             .accessibilityLabel(Text(name))
             .aspectRatio(contentMode: .fit)
             .padding(.horizontal, 25)
+            .accessibilityIdentifier("GameImage")
+            .accessibilityValue(name)
+        
     }
 }
 #Preview("GameView") {
