@@ -22,6 +22,7 @@ struct ImagePickerView: View {
             .accessibilityIdentifier("PrevImage")
             .buttonStyle(.plain)
             .foregroundStyle(.tint)
+            .accessibilityValue(String(index))
 
             Image(systemName: images.indices.contains(index) ? images[index] : images.first ?? "questionmark")
                 .resizable()
@@ -31,7 +32,7 @@ struct ImagePickerView: View {
                 .frame(width: 150, height: 150)
                 .accessibilityLabel(images.indices.contains(index) ? images[index] : (images.first ?? "Image"))
                 .accessibilityIdentifier("targetImage")
-                .accessibilityValue(String(index))
+                .accessibilityValue(images.indices.contains(index) ? images[index] : (images.first ?? "Image"))
 
 
             Button(action: showNext) {
@@ -43,6 +44,7 @@ struct ImagePickerView: View {
             }
             .accessibilityLabel("Next image")
             .accessibilityIdentifier("NextImage")
+            .accessibilityValue(String(index))
             .buttonStyle(.plain)
             .foregroundStyle(.tint)
         }

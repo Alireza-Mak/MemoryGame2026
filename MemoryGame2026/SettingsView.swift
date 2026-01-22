@@ -26,7 +26,6 @@ struct SettingsView: View {
             
             Toggle("Bonus mode", isOn: $bonus)
                 .accessibilityIdentifier("SettingsBonusToggle")
-                .accessibilityValue(String(bonus))
         }
         
         .navigationTitle("Settings")

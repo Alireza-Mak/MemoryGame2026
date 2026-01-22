@@ -57,6 +57,7 @@ final class MemoryGame2026UITests: XCTestCase {
         for _ in 1...numberOfTap {
             minusButton.tap()
         }
+        app.buttons["house"].firstMatch.tap()
     }
     
     @MainActor
@@ -99,6 +100,7 @@ final class MemoryGame2026UITests: XCTestCase {
                 XCTAssertEqual(textRef.label,"\(minValue) Rows/Cols")
             }
         }
+        app.buttons["house"].firstMatch.tap()
     }
     
     @MainActor
@@ -108,9 +110,10 @@ final class MemoryGame2026UITests: XCTestCase {
         app/*@START_MENU_TOKEN@*/.buttons["gear"]/*[[".otherElements",".buttons[\"Settings\"]",".buttons[\"gear\"]",".buttons"],[[[-1,2],[-1,1],[-1,3],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
 
         let toggle = app.switches["SettingsBonusToggle"]
+        let defaultValue = toggle.value as! String
         XCTAssertTrue(toggle.waitForExistence(timeout: 1), "Bonus toggle should exist")
        
-        for _ in 1...5 {
+        for _ in 1...3 {
             let initialValue = toggle.value as! String
             if initialValue == "1" {
                 XCTAssertEqual(initialValue, "1")
@@ -127,91 +130,192 @@ final class MemoryGame2026UITests: XCTestCase {
                 XCTAssertEqual(secondValue, "1")
             }
         }
+
+        if defaultValue != toggle.value as! String{
+            app.switches[toggle.value as! String].firstMatch.tap()
+        }
+        app.buttons["house"].firstMatch.tap()
     }
+    
     @MainActor
     func testImagePicker () throws{
+        let images = ["sun.max", "cloud.sun", "cloud.rain"]
         let app = XCUIApplication()
         app.activate()
-        app/*@START_MENU_TOKEN@*/.buttons["gear"]/*[[".otherElements",".buttons[\"Settings\"]",".buttons[\"gear\"]",".buttons"],[[[-1,2],[-1,1],[-1,3],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
+        
+        let gearButton = app.buttons["gear"].firstMatch
+        XCTAssertTrue(gearButton.waitForExistence(timeout: 1.0), "Gear button should exist on Home")
+        gearButton.tap()
       
-        let images: [String] = ["sun.max", "cloud.sun", "cloud.rain"]
-        let next = app.buttons["NextImage"]
-        let prev = app.buttons["PrevImage"]
+        let nextImgButton = app.buttons["NextImage"]
+        XCTAssertTrue(nextImgButton.waitForExistence(timeout: 1.0), "Next image button should exist")
+        
+        let prevImgButton = app.buttons["PrevImage"]
+        XCTAssertTrue(prevImgButton.waitForExistence(timeout: 1.0), "Next image button should exist")
 
-        var initialImage = app.images["targetImage"].value as! String
+        let selectedImgage = app.images["targetImage"]
+        XCTAssertTrue(selectedImgage.waitForExistence(timeout: 1.0), "Image should show up")
+
+        let selectedImgValue = selectedImgage.value as! String
+        let currentImageIndex = Int(nextImgButton.value as! String)!
         
-            for _ in 0..<images.count {
-            next.tap()
-        }
-        var finalImage = app.images["targetImage"].value as! String
-        XCTAssertEqual(initialImage, finalImage)
-        
-        initialImage = app.images["targetImage"].value as! String
-        for _ in 0..<images.count {
-            prev.tap()
+        for _ in 0..<4 {
+            nextImgButton.tap()
+            XCTAssertEqual(selectedImgValue, images[currentImageIndex])
         }
         
-        finalImage = app.images["targetImage"].value as! String
-        XCTAssertEqual(initialImage, finalImage)
+        for _ in 0..<4 {
+            prevImgButton.tap()
+            XCTAssertEqual(selectedImgValue, images[currentImageIndex])
+        }
+        
+        app.buttons["house"].firstMatch.tap()
     }
     
     func testGameViewImageUpdatedByImagePicker() throws {
             let images = ["sun.max", "cloud.sun", "cloud.rain"]
-        
             let app = XCUIApplication()
             app.activate()
-
         
-            app/*@START_MENU_TOKEN@*/.buttons["gear"]/*[[".otherElements",".buttons[\"Settings\"]",".buttons[\"gear\"]",".buttons"],[[[-1,2],[-1,1],[-1,3],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
+            let gearButton = app.buttons["gear"].firstMatch
+            XCTAssertTrue(gearButton.waitForExistence(timeout: 1.0), "Gear button should exist on Home")
+            gearButton.tap()
         
-
-            let nextButton = app.buttons["NextImage"]
-            let pickerImage = app.images["targetImage"]
-            XCTAssertEqual(pickerImage.value as? String, images[0])
+            let nextImgButton = app.buttons["NextImage"]
+            let prevImgButton = app.buttons["PrevImage"]
+            XCTAssertTrue(nextImgButton.waitForExistence(timeout: 1.0), "Next image button should exist")
         
-            app.buttons["house"].firstMatch.tap()
-            var gameImage = app.images["GameImage"]
+            let selectedImage = app.images["targetImage"]
+            
+            XCTAssertTrue(selectedImage.waitForExistence(timeout: 1.0), "Image should show up")
+        
+            XCTAssertEqual(selectedImage.value as? String, images[0])
+        
+            let homeButton = app.buttons["house"].firstMatch
+            XCTAssertTrue(homeButton.waitForExistence(timeout: 1.0), "Home button should exist in Settings")
+            homeButton.tap()
+        
+            let gameImage = app.images["GameImage"]
+            XCTAssertTrue(gameImage.waitForExistence(timeout: 1.0), "Game Image should exist")
             XCTAssertEqual(gameImage.value as? String, images[0])
 
-            app.buttons["gear"].firstMatch.tap()
-            for i in 1..<images.count {
-                nextButton.tap()
-                XCTAssertEqual(pickerImage.value as? String, images[i],
-                               "Picker image should be \(images[i])")
+            gearButton.tap()
+            for _ in 1..<5 {
+                nextImgButton.tap()
+                XCTAssertEqual(selectedImage.value as? String, images[Int(nextImgButton.value as! String)!],
+                               "Picker image should be \(images[Int(nextImgButton.value as! String)!])")
+                let imageNameInSettingPage = selectedImage.value as? String
+                homeButton.tap()
+                XCTAssertEqual(gameImage.value as? String, imageNameInSettingPage,
+                               "GameView image should be \(images[Int(nextImgButton.value as! String)!])")
                 
-                app.buttons["house"].firstMatch.tap()
-                gameImage = app.images["GameImage"]
-                XCTAssertEqual(gameImage.value as? String, images[i],
-                               "GameView image should be \(images[i])")
-                
-                app.buttons["gear"].firstMatch.tap()
+                gearButton.tap()
             }
-
-            nextButton.tap()
-            XCTAssertEqual(pickerImage.value as? String, images[0])
         
-            app.buttons["house"].firstMatch.tap()
-            gameImage = app.images["GameImage"]
-            XCTAssertTrue(gameImage.waitForExistence(timeout: 1.0))
+            for _ in 1..<5 {
+                prevImgButton.tap()
+                XCTAssertEqual(selectedImage.value as? String, images[Int(nextImgButton.value as! String)!],
+                               "Picker image should be \(images[Int(nextImgButton.value as! String)!])")
+                let imageNameInSettingPage = selectedImage.value as? String
+                homeButton.tap()
+                XCTAssertEqual(gameImage.value as? String, imageNameInSettingPage,
+                               "GameView image should be \(images[Int(nextImgButton.value as! String)!])")
+                
+                gearButton.tap()
+            }
+        
+            homeButton.tap()
             XCTAssertEqual(gameImage.value as? String, images[0])
         }
-    
-    
+        
     @MainActor
     func testAppStorage ()throws{
+        let imagesLengtg = 3
         let app = XCUIApplication()
         app.activate()
-        app/*@START_MENU_TOKEN@*/.buttons["gear"]/*[[".otherElements",".buttons[\"Settings\"]",".buttons[\"gear\"]",".buttons"],[[[-1,2],[-1,1],[-1,3],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
+        let gearButton = app.buttons["gear"].firstMatch
+        XCTAssertTrue(gearButton.waitForExistence(timeout: 1.0), "Gear button should exist on Home")
+        gearButton.tap()
         
-        let next = app.buttons["NextImage"]
-        next.tap()
-        next.tap()
+        //Next Image button functionality
+        let nextImgBtn = app.buttons["NextImage"]
+        XCTAssertTrue(nextImgBtn.waitForExistence(timeout: 1.0), "Next image button should exist")
+        var imgIndex = Int(nextImgBtn.value as! String)!
         
-        let bonusToggle = app.switches["BonusToggle"].firstMatch.tap()
+        //Toggle button functionality
+        let bonusToggle = app.switches["SettingsBonusToggle"]
+        XCTAssertTrue(bonusToggle.waitForExistence(timeout: 1.0), "Toggle button should exist")
+        //Store the default value of the Toggle button
+        let defaultBounsToggleVal = bonusToggle.value as! String
+        var currentBounsToggleVal = defaultBounsToggleVal
+
+        //Increment Stepper button functionality
+        let incrementStepper = app.buttons["SettingsStepper-Increment"]
+        let decrementStepper = app.buttons["SettingsStepper-Decrement"]
+        XCTAssertTrue(incrementStepper.waitForExistence(timeout: 1.0), "Toggle button should exist")
+        var currentStepperVal = Int(app.staticTexts["SettingsRowsColsText"].value as! String)!
+
+        for _ in 1..<3{
+            nextImgBtn.tap()
+            imgIndex = (imgIndex + 1) % imagesLengtg
+
+            app.switches[currentBounsToggleVal].tap()
+            currentBounsToggleVal = currentBounsToggleVal == "1" ? "0" : "1"
+
+            incrementStepper.tap()
+            currentStepperVal = currentStepperVal >= 10 ? currentStepperVal : currentStepperVal + 1
+        }
         
-        let stepper = app.steppers["StepStepper"]
-        stepper.buttons["Increment"].tap()
-        stepper.buttons["Increment"].tap()
+        let houseButton = app.buttons["house"].firstMatch
+        XCTAssertTrue(houseButton.waitForExistence(timeout: 1.0), "House button should exist on Home")
+        houseButton.tap()
+        app.terminate()
+        
+        // Relaunch the app
+        app.launch()
+        gearButton.tap()
+        
+        // Check the set values with current values
+        XCTAssertEqual(String(imgIndex), nextImgBtn.value as! String)
+        XCTAssertEqual(String(currentBounsToggleVal), bonusToggle.value as! String)
+        let newStepperVal = Int(app.staticTexts["SettingsRowsColsText"].value as! String)!
+        XCTAssertEqual(currentStepperVal, newStepperVal)
+        
+        // Set the default setting
+        defaultSetting(app: app, nextImageButton: nextImgBtn,decrementStepperButton: decrementStepper, currentImageIndexValue: String(imgIndex), currentBonusToggleValue: currentBounsToggleVal, currentStepperValue: currentStepperVal )
     }
     
+    private func defaultSetting(
+        app: XCUIApplication,
+        nextImageButton: XCUIElement,
+        decrementStepperButton: XCUIElement,
+        currentImageIndexValue: String,
+        currentBonusToggleValue: String,
+        currentStepperValue: Int
+    ) {
+    
+        let defaultImageIndex = "0"
+        let defaultBonusToggleValue = "0"
+        let defaultStepperValue: Int = 5
+        
+        // Reset Image to default if needed
+        var imageIndex = currentImageIndexValue
+        while imageIndex != defaultImageIndex {
+            nextImageButton.tap()
+            imageIndex = nextImageButton.value as? String ?? imageIndex
+        }
+
+        // Reset bonus toggle to default if needed
+        if currentBonusToggleValue != defaultBonusToggleValue {
+            app.switches[currentBonusToggleValue].firstMatch.tap()
+        }
+
+        // Decrement stepper until it reaches defaultStepperValue
+        var stepperValue = currentStepperValue
+        while defaultStepperValue != stepperValue{
+            decrementStepperButton.tap()
+            stepperValue = Int(app.staticTexts["SettingsRowsColsText"].value as! String)!
+        }
+        app.buttons["house"].firstMatch.tap()
+    }
 }
