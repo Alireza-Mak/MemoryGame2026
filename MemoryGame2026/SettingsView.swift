@@ -33,9 +33,9 @@ struct SettingsView: View {
     }
 }
 #Preview("SettingsView") {
-    @State var bonus = true
-    @State var index = 0
-    @State var step = 7
+    @Previewable @State var bonus = true
+    @Previewable @State var index = 0
+    @Previewable @State var step = 7
     return SettingsView(bonus: $bonus, index: $index, step: $step, images: ["sun.max", "cloud.sun", "cloud.rain"])
 }
 

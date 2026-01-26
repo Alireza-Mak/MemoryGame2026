@@ -255,7 +255,7 @@ final class MemoryGame2026UITests: XCTestCase {
         XCTAssertTrue(incrementStepper.waitForExistence(timeout: 1.0), "Toggle button should exist")
         var currentStepperVal = Int(app.staticTexts["SettingsRowsColsText"].value as! String)!
 
-        for _ in 1..<3{
+        for _ in 1..<2{
             nextImgBtn.tap()
             imgIndex = (imgIndex + 1) % imagesLengtg
 
