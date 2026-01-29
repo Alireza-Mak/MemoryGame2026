@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  MemoryGame2026
 //
-//  Created by  on 2026-01-08.
+//  Created by Alireza Mirzaahmadkermanshahi on 2026-01-08.
 //
 
 import SwiftUI
@@ -21,7 +21,11 @@ struct ContentView: View {
                 if showingSettings {
                     SettingsView(bonus: $bonus, index: $index, step: $step, images: Self.images)
                 } else {
-                    GameView(name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark")
+                    GameView(
+                        name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark",
+                        boardSize: step,
+                        bonus: bonus
+                    )
                 }
             }
             .toolbar {
