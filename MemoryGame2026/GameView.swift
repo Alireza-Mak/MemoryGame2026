@@ -44,12 +44,11 @@ struct GameView: View {
     /// The primary view content that renders the board and counters, and handles user interactions.
     /// Displays a brief preview of all tiles on appear before enabling gameplay.
     var body: some View {
-
         VStack{
             ForEach(board.tiles.indices, id: \.self){ row in
                 HStack{
                     ForEach(board.tiles[row]){ tile in
-                        
+                        // Tile button
                         Button(action: {
                             board.revealTile(tile: tile)
                         }){
@@ -68,9 +67,13 @@ struct GameView: View {
                 }
                 .padding()
             }
+            // Space between grid and counters
             Spacer()
+            // Shows total taps
             Text("Tap counter: \(board.tapCount) ")
-            Text("Treasure counter: \(board.treasureCount)")
+            // Shows treasures found
+            Text("Treasures found: \(board.treasureCount)")
+            // Shows remaining unrevealed treasures
             Text("Unreveal treasures: \(board.unrevealedTreasureCount())")
         }
         .padding()
@@ -86,3 +89,4 @@ struct GameView: View {
 #Preview("GameView") {
     GameView(name: "sun.max", boardSize: 5, bonus: true)
 }
+

@@ -7,7 +7,6 @@
 import SwiftUI
 
 struct SettingsView: View {
-
     @Binding var bonus: Bool
     @Binding var index: Int
     @Binding var step: Int
@@ -15,8 +14,10 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            // Select treasure symbol
+            /// Image picker to choose the SF Symbol used for the treasure.
             ImagePickerView(index: $index, images: images)
-            
+            // Adjust board size
             Stepper(value: $step, in: 5...10) {
                 Text("\(step) Rows/Cols")
                 .accessibilityIdentifier("SettingsRowsColsText")
@@ -24,11 +25,10 @@ struct SettingsView: View {
             }
             .accessibilityIdentifier("SettingsStepper")
             
+            // Toggle bonus mode
             Toggle("Bonus mode", isOn: $bonus)
                 .accessibilityIdentifier("SettingsBonusToggle")
         }
-        
-        .navigationTitle("Settings")
         .padding(25)
     }
 }
