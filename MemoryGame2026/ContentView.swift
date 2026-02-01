@@ -24,11 +24,10 @@ struct ContentView: View {
     /// Controls whether settings are shown instead of the game.
     @State private var showingSettings: Bool = false
     
-
+    
     /// Renders the main navigation and switches between SettingsView and GameView.
     var body: some View {
         NavigationStack {
-            // Main content switch
             Group {
                 if showingSettings {
                     SettingsView(bonus: $bonus, index: $index, step: $step, images: Self.images)
@@ -54,6 +53,7 @@ struct ContentView: View {
     }
 }
 
+// Preview showcasing the root ContentView in its default state.
 #Preview {
     ContentView()
 }

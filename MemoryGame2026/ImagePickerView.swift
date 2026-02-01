@@ -17,9 +17,10 @@ struct ImagePickerView: View {
     let images: [String]
     /// Renders a horizontal layout with previous/next controls and the selected symbol.
     /// Includes accessibility labels, identifiers, and values for UI testing and VoiceOver.
+    
+    
     var body: some View {
         HStack(spacing: 70) {
-            // Previous button
             Button(action: showPrevious) {
                 Image(systemName: "arrowtriangle.left.fill")
                     .resizable()
@@ -33,7 +34,6 @@ struct ImagePickerView: View {
             .foregroundStyle(.tint)
             .accessibilityValue(String(index))
 
-            // Selected image
             Image(systemName: images.indices.contains(index) ? images[index] : images.first ?? "questionmark")
                 .resizable()
                 .symbolRenderingMode(.monochrome)
@@ -44,7 +44,6 @@ struct ImagePickerView: View {
                 .accessibilityIdentifier("targetImage")
                 .accessibilityValue(images.indices.contains(index) ? images[index] : (images.first ?? "Image"))
 
-            // Next button
             Button(action: showNext) {
                 Image(systemName: "arrowtriangle.right.fill")
                     .resizable()

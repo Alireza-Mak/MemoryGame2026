@@ -14,8 +14,8 @@
             filePath = "MemoryGame2026UITests/MemoryGame2026UITests.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "282"
-            endingLineNumber = "282"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
             landmarkName = "testAppStorage()"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "MemoryGame2026UITests/MemoryGame2026UITests.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "277"
-            endingLineNumber = "277"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
             landmarkName = "testAppStorage()"
             landmarkType = "7">
          </BreakpointContent>
