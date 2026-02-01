@@ -15,15 +15,15 @@ import SwiftUI
 @Observable
 class Tile: Identifiable {
     /// The SF Symbol name shown for this tile.
-    private(set) var contents: String
+    var contents: String
     /// Stable unique identifier for the tile.
     let id = UUID()
     /// Whether the tile has been revealed.
-    private(set) var isRevealed: Bool = false
+    var isRevealed: Bool = false
     
     /// Creates a tile with the given symbol contents.
     /// - Parameter contents: The SF Symbol name to display.
-    init(contents: String){
+    init(contents: String){	
         self.contents = contents
     }
     
