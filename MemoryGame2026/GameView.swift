@@ -19,7 +19,7 @@ struct GameView: View {
         self.name = name
         self.boardSize = boardSize
         self.bouns = bonus
-        self.board = Board(n: boardSize, treasure: name, hasBonus: bonus)
+        self.board = Board(size: boardSize, treasureSymbol: name, hasBonus: bonus)
     }
    
     var body: some View {
@@ -47,9 +47,10 @@ struct GameView: View {
                 }
                 .padding()
             }
+            Spacer()
             Text("Tap counter: \(board.tapCount) ")
             Text("Treasure counter: \(board.treasureCount)")
-            Text("Unreveal treasures: \(board.getUnrevealedTreasures())")
+            Text("Unreveal treasures: \(board.unrevealedTreasureCount())")
         }
         .padding()
         .onAppear {
@@ -60,5 +61,5 @@ struct GameView: View {
     }
 }
 #Preview("GameView") {
-    GameView(name: "sun.max", boardSize: 10, bonus: true)
+    GameView(name: "sun.max", boardSize: 5, bonus: true)
 }
