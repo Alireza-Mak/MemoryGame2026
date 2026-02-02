@@ -7,8 +7,15 @@
 
 import XCTest
 
+/// UI tests for MemoryGame2026.
+///
+/// This suite validates Settings interactions (stepper, toggle, image picker),
+/// persistence via AppStorage, and that Settings are reflected in the Game view.
+/// Tests use `@MainActor` where UI synchronization is required.
 final class MemoryGame2026UITests: XCTestCase {
     
+    /// Prepares the UI test environment before each test.
+    /// Stops on first failure and establishes a clean initial state.
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
@@ -18,13 +25,26 @@ final class MemoryGame2026UITests: XCTestCase {
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
     
+    /// Cleans up after each test method.
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
+    /// Verifies the Settings rows/cols stepper can be incremented and then decremented
+    /// a fixed number of times without exceeding limits, and returns to Home safely.
+    ///
+    /// Steps:
+    /// 1. Open Settings from Home (gear button).
+    /// 2. Tap the increment button a fixed number of times.
+    /// 3. Tap the decrement button the same number of times.
+    /// 4. Navigate back to Home (house button).
+    ///
+    /// This smoke test ensures the basic tap targets exist and respond, without
+    /// asserting label values (covered more thoroughly in `testRowsColsStepperV2`).
     @MainActor
     func testRowsColsStepper() throws {
         let numberOfTap: Int = 7
+        
         let app = XCUIApplication()
         app.activate()
         app/*@START_MENU_TOKEN@*/.buttons["gear"]/*[[".otherElements",".buttons[\"Settings\"]",".buttons[\"gear\"]",".buttons"],[[[-1,2],[-1,1],[-1,3],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
@@ -41,11 +61,15 @@ final class MemoryGame2026UITests: XCTestCase {
         app.buttons["house"].firstMatch.tap()
     }
     
+    /// Validates the rows/cols stepper label updates within min/max bounds
+    /// for a series of increments and decrements.
+    /// Asserts the label value reflects clamping at the configured limits.
     @MainActor
     func testRowsColsStepperV2() throws {
         let numberOfTap: Int = 7
         let minValue = 5
         let maxValue = 10
+        
         let app = XCUIApplication()
         app.activate()
         app/*@START_MENU_TOKEN@*/.buttons["gear"]/*[[".otherElements",".buttons[\"Settings\"]",".buttons[\"gear\"]",".buttons"],[[[-1,2],[-1,1],[-1,3],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch.tap()
@@ -65,7 +89,6 @@ final class MemoryGame2026UITests: XCTestCase {
             }
         }
         
-        
         let minusButton = app.buttons["SettingsStepper-Decrement"].firstMatch
         for i in 1...numberOfTap {
             let textRef = app/*@START_MENU_TOKEN@*/.staticTexts["SettingsRowsColsText"]/*[[".otherElements",".staticTexts[\"5 Rows\/Cols\"]",".staticTexts[\"SettingsRowsColsText\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.firstMatch
@@ -84,6 +107,8 @@ final class MemoryGame2026UITests: XCTestCase {
         app.buttons["house"].firstMatch.tap()
     }
     
+    /// Ensures the bonus toggle in Settings flips between on/off states reliably
+    /// and can be restored to its initial state.
     @MainActor
     func testToggle() throws {
         let app = XCUIApplication()
@@ -118,6 +143,8 @@ final class MemoryGame2026UITests: XCTestCase {
         app.buttons["house"].firstMatch.tap()
     }
     
+    /// Confirms that next/previous image controls cycle through the available images
+    /// and that the selected image value corresponds to the picker index.
     @MainActor
     func testImagePicker () throws{
         let images = ["sun.max", "cloud.sun", "cloud.rain"]
@@ -153,14 +180,20 @@ final class MemoryGame2026UITests: XCTestCase {
         app.buttons["house"].firstMatch.tap()
     }
     
+    /// Verifies that changing the selected image in Settings updates the Game view tiles
+    /// to use the same image value.
     func testGameViewImageUpdatedByImagePicker() throws {
         let images = ["sun.max", "cloud.sun", "cloud.rain"]
+        
+        //Open the app
         let app = XCUIApplication()
         app.activate()
         
+        //Navigate tp Setting View
         let gearButton = app.buttons["gear"].firstMatch
         XCTAssertTrue(gearButton.waitForExistence(timeout: 1.0), "Gear button should exist on Home")
         gearButton.tap()
+        
         
         let nextImgButton = app.buttons["NextImage"]
         let prevImgButton = app.buttons["PrevImage"]
@@ -172,11 +205,12 @@ final class MemoryGame2026UITests: XCTestCase {
         
         XCTAssertEqual(selectedImage.value as? String, images[0])
         
+        //Navigate tp Game View
         let homeButton = app.buttons["house"].firstMatch
         XCTAssertTrue(homeButton.waitForExistence(timeout: 1.0), "Home button should exist in Settings")
         homeButton.tap()
         
-        
+        // Check if the image in Game View as same as the selected image in Setting View
         let gameTile = app.buttons.matching(identifier: "GameButton")
         XCTAssertGreaterThan(gameTile.count, 0, "Game tiles should exist")
         var (gameTileValue, _) = foundValue(query: gameTile, expectedValue: images[0])
@@ -188,12 +222,16 @@ final class MemoryGame2026UITests: XCTestCase {
             XCTAssertEqual(selectedImage.value as? String, images[Int(nextImgButton.value as! String)!],
                            "Picker image should be \(images[Int(nextImgButton.value as! String)!])")
             let imageNameInSettingPage = selectedImage.value as! String
+            
+            //Navigate to Game View
             homeButton.tap()
             
+            // Check if the image in Game View as same as the selected image in Setting View
             (gameTileValue, _) = foundValue(query: gameTile, expectedValue: imageNameInSettingPage)
             XCTAssertEqual(gameTileValue, imageNameInSettingPage,
                            "GameView image should be \(images[Int(nextImgButton.value as! String)!])")
             
+            //Navigate to Setting View
             gearButton.tap()
         }
         
@@ -202,12 +240,16 @@ final class MemoryGame2026UITests: XCTestCase {
             XCTAssertEqual(selectedImage.value as? String, images[Int(nextImgButton.value as! String)!],
                            "Picker image should be \(images[Int(nextImgButton.value as! String)!])")
             let imageNameInSettingPage = selectedImage.value as! String
+            
+            //Navigate to Game View
             homeButton.tap()
             
+            // Check if the image in Game View as same as the selected image in Setting View
             (gameTileValue, _) = foundValue(query: gameTile, expectedValue: imageNameInSettingPage)
             XCTAssertEqual(gameTileValue, imageNameInSettingPage,
                            "GameView image should be \(images[Int(nextImgButton.value as! String)!])")
             
+            //Navigate to Setting View
             gearButton.tap()
         }
         
@@ -217,6 +259,11 @@ final class MemoryGame2026UITests: XCTestCase {
         XCTAssertEqual(gameTileValue, images[0], "Expected to find a tile with value \(images[0])")
     }
     
+    /// Counts elements within a query whose accessibility value equals `expectedValue`.
+    /// - Parameters:
+    ///   - query: The query of elements to inspect.
+    ///   - expectedValue: The target accessibility value to match.
+    /// - Returns: A tuple containing the matched value (if found) and the number of matches.
     func foundValue(query: XCUIElementQuery,expectedValue: String) -> (String, Int) {
         var numberOfMatches: Int = 0
         var foundValue: String = ""
@@ -230,28 +277,34 @@ final class MemoryGame2026UITests: XCTestCase {
         return (foundValue, numberOfMatches)
     }
     
+    /// Validates that Settings (image index, bonus toggle, stepper) persist across app relaunch
+    /// using AppStorage by setting values, terminating, relaunching, and asserting restoration.
     @MainActor
     func testAppStorage ()throws{
         let imagesLengtg = 3
+        
+        //Open the App
         let app = XCUIApplication()
         app.activate()
+        
+        //Navigate tp Setting View
         let gearButton = app.buttons["gear"].firstMatch
         XCTAssertTrue(gearButton.waitForExistence(timeout: 1.0), "Gear button should exist on Home")
         gearButton.tap()
         
-        //Next Image button functionality
+        //Store the index of current Image
         let nextImgBtn = app.buttons["NextImage"]
         XCTAssertTrue(nextImgBtn.waitForExistence(timeout: 1.0), "Next image button should exist")
         var imgIndex = Int(nextImgBtn.value as! String)!
         
-        //Toggle button functionality
+        //Store the default and current value of bonus toggle
         let bonusToggle = app.switches["SettingsBonusToggle"]
         XCTAssertTrue(bonusToggle.waitForExistence(timeout: 1.0), "Toggle button should exist")
-        //Store the default value of the Toggle button
+
         let defaultBounsToggleVal = bonusToggle.value as! String
         var currentBounsToggleVal = defaultBounsToggleVal
         
-        //Increment Stepper button functionality
+        //Get the current value of stepper
         let incrementStepper = app.buttons["SettingsStepper-Increment"]
         let decrementStepper = app.buttons["SettingsStepper-Decrement"]
         XCTAssertTrue(incrementStepper.waitForExistence(timeout: 1.0), "Toggle button should exist")
@@ -268,9 +321,12 @@ final class MemoryGame2026UITests: XCTestCase {
             currentStepperVal = currentStepperVal >= 10 ? currentStepperVal : currentStepperVal + 1
         }
         
+        //Navigate tp Game View
         let houseButton = app.buttons["house"].firstMatch
         XCTAssertTrue(houseButton.waitForExistence(timeout: 1.0), "House button should exist on Home")
         houseButton.tap()
+        
+        //Terminate the app
         app.terminate()
         
         // Relaunch the app
@@ -287,6 +343,8 @@ final class MemoryGame2026UITests: XCTestCase {
         defaultSetting(app: app, nextImageButton: nextImgBtn,decrementStepperButton: decrementStepper, currentImageIndexValue: String(imgIndex), currentBonusToggleValue: currentBounsToggleVal, currentStepperValue: currentStepperVal )
     }
     
+    /// Resets Settings to known defaults (image index, bonus toggle, stepper)
+    /// to keep tests isolated and repeatable.
     private func defaultSetting(
         app: XCUIApplication,
         nextImageButton: XCUIElement,
@@ -321,9 +379,14 @@ final class MemoryGame2026UITests: XCTestCase {
         app.buttons["house"].firstMatch.tap()
     }
     
+    /// End-to-end validation that Settings selections (image, bonus, rows/cols)
+    /// are correctly applied in the Game view: total tiles, treasure distribution,
+    /// and bonus count.
     @MainActor
     func testSettingsReflectedInGameView() throws {
         let images = ["sun.max", "cloud.sun", "cloud.rain"]
+        
+        //Open the app
         let app = XCUIApplication()
         app.activate()
         
@@ -366,23 +429,17 @@ final class MemoryGame2026UITests: XCTestCase {
         let (gameTreasureValue, numberOfTreasures) = foundValue(query: tileButtonContianer, expectedValue: expectedTreasure)
         XCTAssertEqual(gameTreasureValue, expectedTreasure, "Expected to find a tile with value \(expectedTreasure)")
         
-        //Chekc number of treasure
+        //Check number of treasure
         XCTAssertEqual(numberOfTreasures, expectedNumberOfTreasures, "Expected to find treasuers a tile with value \(expectedNumberOfTreasures)")
         
-        
-        //Chekc number of bonus
+        //Check number of bonus
         let expectedBonusSymbol = "bitcoinsign.circle"
         let (gameBonusValue, numberOfBonuses) = foundValue(query: tileButtonContianer, expectedValue: expectedBonusSymbol)
         XCTAssertEqual(gameBonusValue, expectedBonusSymbol, "Expected to find a tile with value \(expectedBonusSymbol)")
         XCTAssertEqual(numberOfBonuses, expectedNumberOfBonus, "Expected to find \(expectedNumberOfBonus) bonus a tile.")
         
-        
-        
         // Set the default setting
         gearButton.tap()
         defaultSetting(app: app, nextImageButton: nextImgBtn,decrementStepperButton: decrementStepper, currentImageIndexValue: String(currentImageIndex), currentBonusToggleValue: currentBonusValue, currentStepperValue: currentStepperVal )
-        
-        
     }
-    
 }
