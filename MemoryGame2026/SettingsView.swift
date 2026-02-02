@@ -19,7 +19,7 @@ struct SettingsView: View {
     @Binding var step: Int
     /// Available SF Symbol names to present in the picker.
     let images: [String]
-
+    
     
     /// Renders controls for symbol selection, board size, and bonus mode.
     var body: some View {
@@ -27,8 +27,8 @@ struct SettingsView: View {
             ImagePickerView(index: $index, images: images)
             Stepper(value: $step, in: 5...10) {
                 Text("\(step) Rows/Cols")
-                .accessibilityIdentifier("SettingsRowsColsText")
-                .accessibilityValue(String(step))
+                    .accessibilityIdentifier("SettingsRowsColsText")
+                    .accessibilityValue(String(step))
             }
             .accessibilityIdentifier("SettingsStepper")
             

@@ -23,7 +23,7 @@ class Tile: Identifiable {
     
     /// Creates a tile with the given symbol contents.
     /// - Parameter contents: The SF Symbol name to display.
-    init(contents: String){	
+    init(contents: String){
         self.contents = contents
     }
     

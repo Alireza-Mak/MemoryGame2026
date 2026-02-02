@@ -28,7 +28,7 @@ struct GameView: View {
     /// Controls whether the board is currently in a preview state.
     /// When true, all tiles are shown and interactions are disabled until the preview ends.
     @State private var isInitiallyShowingBoard: Bool = true
-
+    
     /// Creates a new game view with the given configuration.
     /// - Parameters:
     ///   - name: The SF Symbols name used for treasure tiles.
@@ -40,7 +40,7 @@ struct GameView: View {
         self.bonus = bonus
         self.board = Board(size: boardSize, treasureSymbol: name, hasBonus: bonus)
     }
-   
+    
     
     /// The primary view content that renders the board and counters, and handles user interactions.
     /// Displays a brief preview of all tiles on appear before enabling gameplay.
@@ -49,27 +49,28 @@ struct GameView: View {
             ForEach(board.tiles.indices, id: \.self){ row in
                 HStack{
                     ForEach(board.tiles[row]){ tile in
+                        let isRevealTile = tile.isRevealed
+                        let symbolName = isInitiallyShowingBoard || isRevealTile ? tile.contents: "questionmark.circle.dashed"
                         Button(action: {
                             board.revealTile(tile: tile)
                         }){
-                            let isRevealTile = tile.isRevealed
-                            let symbolName = isInitiallyShowingBoard || isRevealTile ? tile.contents: "questionmark.circle.dashed"
-
                             Image(systemName: symbolName)
                                 .resizable()
                                 .aspectRatio(contentMode:.fit)
                                 .accessibilityLabel("tile")
                                 .accessibilityIdentifier("GameImage")
-                                .accessibilityValue(name)
+                                .accessibilityValue(symbolName)
                         }
                         .disabled(isInitiallyShowingBoard)
+                        .accessibilityIdentifier("GameButton")
+                        .accessibilityValue(symbolName)
                     }
                 }
                 .padding()
             }
-
+            
             Spacer()
-
+            
             Text("Tap counter: \(board.tapCount) ")
             
             Text("Treasures found: \(board.treasureCount)")

@@ -88,7 +88,7 @@ class Board {
             }
         }
     }
-
+    
     /// Computes how many treasure tiles to place based on board area (25%).
     /// - Returns: The rounded number of treasure tiles to place.
     func computeTreasureCount() -> Int {

@@ -33,7 +33,7 @@ struct ImagePickerView: View {
             .buttonStyle(.plain)
             .foregroundStyle(.tint)
             .accessibilityValue(String(index))
-
+            
             Image(systemName: images.indices.contains(index) ? images[index] : images.first ?? "questionmark")
                 .resizable()
                 .symbolRenderingMode(.monochrome)
@@ -43,7 +43,7 @@ struct ImagePickerView: View {
                 .accessibilityLabel(images.indices.contains(index) ? images[index] : (images.first ?? "Image"))
                 .accessibilityIdentifier("targetImage")
                 .accessibilityValue(images.indices.contains(index) ? images[index] : (images.first ?? "Image"))
-
+            
             Button(action: showNext) {
                 Image(systemName: "arrowtriangle.right.fill")
                     .resizable()
@@ -63,7 +63,7 @@ struct ImagePickerView: View {
     private func showPrevious() {
         index = index == 0 ? images.count - 1 : index - 1
     }
-
+    
     /// Moves selection to the next symbol, wrapping to the beginning at the end of the list.
     private func showNext() {
         index = (index + 1) % images.count
