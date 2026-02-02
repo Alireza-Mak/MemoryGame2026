@@ -403,7 +403,7 @@ final class MemoryGame2026UITests: XCTestCase {
         //Make bonus availabe for the game in Setting page
         let bonusToggle = app.switches["SettingsBonusToggle"]
         let defaultBonusValue = bonusToggle.value as! String
-        app.switches[defaultBonusValue].tap()
+        defaultBonusValue == "0" ? app.switches[defaultBonusValue].tap() : nil
         let currentBonusValue = bonusToggle.value as! String
         let expectedNumberOfBonus = Int(currentBonusValue)!
         
@@ -419,9 +419,15 @@ final class MemoryGame2026UITests: XCTestCase {
         let houseButton = app.buttons["house"].firstMatch
         houseButton.tap()
         
+        //Wait for 5 seconds
+        sleep(5)
+        
         // Check number of tiles in Game page
         let tileButtonContianer = app.buttons.matching(identifier: "GameButton")
         let numberOfTiles = tileButtonContianer.count
+        for i in 0..<numberOfTiles {
+            tileButtonContianer.element(boundBy: i).tap()
+        }
         XCTAssertTrue(tileButtonContianer.firstMatch.waitForExistence(timeout: 1.0), "At least there is One tile button should exist on Home")
         XCTAssertEqual(numberOfTiles, expectedNumberOfTiles)
         
