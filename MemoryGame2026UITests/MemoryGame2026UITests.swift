@@ -176,11 +176,10 @@ final class MemoryGame2026UITests: XCTestCase {
         XCTAssertTrue(homeButton.waitForExistence(timeout: 1.0), "Home button should exist in Settings")
         homeButton.tap()
         
-        var gameTile = app.buttons.matching(identifier: "GameButton")
+        
+        let gameTile = app.buttons.matching(identifier: "GameButton")
         XCTAssertGreaterThan(gameTile.count, 0, "Game tiles should exist")
-        
-        var gameTileValue = foundValue(query: gameTile, expectedValue: images[0])
-        
+        var (gameTileValue, _) = foundValue(query: gameTile, expectedValue: images[0])
         XCTAssertEqual(gameTileValue, images[0], "Expected to find a tile with value \(images[0])")
         
         gearButton.tap()
@@ -191,7 +190,7 @@ final class MemoryGame2026UITests: XCTestCase {
             let imageNameInSettingPage = selectedImage.value as! String
             homeButton.tap()
             
-            gameTileValue = foundValue(query: gameTile, expectedValue: imageNameInSettingPage)
+            (gameTileValue, _) = foundValue(query: gameTile, expectedValue: imageNameInSettingPage)
             XCTAssertEqual(gameTileValue, imageNameInSettingPage,
                            "GameView image should be \(images[Int(nextImgButton.value as! String)!])")
             
@@ -205,7 +204,7 @@ final class MemoryGame2026UITests: XCTestCase {
             let imageNameInSettingPage = selectedImage.value as! String
             homeButton.tap()
             
-            gameTileValue = foundValue(query: gameTile, expectedValue: imageNameInSettingPage)
+            (gameTileValue, _) = foundValue(query: gameTile, expectedValue: imageNameInSettingPage)
             XCTAssertEqual(gameTileValue, imageNameInSettingPage,
                            "GameView image should be \(images[Int(nextImgButton.value as! String)!])")
             
@@ -213,19 +212,22 @@ final class MemoryGame2026UITests: XCTestCase {
         }
         
         homeButton.tap()
-        gameTileValue = foundValue(query: gameTile, expectedValue: images[0])
         
+        (gameTileValue, _) = foundValue(query: gameTile, expectedValue: images[0])
         XCTAssertEqual(gameTileValue, images[0], "Expected to find a tile with value \(images[0])")
     }
     
-    func foundValue(query: XCUIElementQuery,expectedValue: String) -> String? {
+    func foundValue(query: XCUIElementQuery,expectedValue: String) -> (String, Int) {
+        var numberOfMatches: Int = 0
+        var foundValue: String = ""
         for i in 0..<query.count {
             let element = query.element(boundBy: i)
-            if element.value as? String == expectedValue {
-                return expectedValue
+            if element.value as! String == expectedValue {
+                foundValue = expectedValue
+                numberOfMatches += 1
             }
         }
-        return nil
+        return (foundValue, numberOfMatches)
     }
     
     @MainActor
@@ -319,5 +321,68 @@ final class MemoryGame2026UITests: XCTestCase {
         app.buttons["house"].firstMatch.tap()
     }
     
+    @MainActor
+    func testSettingsReflectedInGameView() throws {
+        let images = ["sun.max", "cloud.sun", "cloud.rain"]
+        let app = XCUIApplication()
+        app.activate()
+        
+        // Go to Setting Page
+        let gearButton = app.buttons["gear"].firstMatch
+        gearButton.tap()
+        
+        //Select treasure in Setting page
+        let nextImgBtn = app.buttons["NextImage"]
+        nextImgBtn.tap()
+        let currentImageIndex = Int(nextImgBtn.value as! String)!
+        let expectedTreasure = images[currentImageIndex]
+        
+        //Make bonus availabe for the game in Setting page
+        let bonusToggle = app.switches["SettingsBonusToggle"]
+        let defaultBonusValue = bonusToggle.value as! String
+        app.switches[defaultBonusValue].tap()
+        let currentBonusValue = bonusToggle.value as! String
+        let expectedNumberOfBonus = Int(currentBonusValue)!
+        
+        //Set Row and tile for game in Setting page
+        let incrementStepper = app.buttons["SettingsStepper-Increment"]
+        let decrementStepper = app.buttons["SettingsStepper-Decrement"]
+        incrementStepper.tap()
+        let currentStepperVal = Int(app.staticTexts["SettingsRowsColsText"].value as! String)!
+        let expectedNumberOfTiles = currentStepperVal * currentStepperVal
+        let expectedNumberOfTreasures = Int((Double(expectedNumberOfTiles) * 0.25).rounded())
+        
+        // Go to Game Page
+        let houseButton = app.buttons["house"].firstMatch
+        houseButton.tap()
+        
+        // Check number of tiles in Game page
+        let tileButtonContianer = app.buttons.matching(identifier: "GameButton")
+        let numberOfTiles = tileButtonContianer.count
+        XCTAssertTrue(tileButtonContianer.firstMatch.waitForExistence(timeout: 1.0), "At least there is One tile button should exist on Home")
+        XCTAssertEqual(numberOfTiles, expectedNumberOfTiles)
+        
+        //Check the value of treasure
+        let (gameTreasureValue, numberOfTreasures) = foundValue(query: tileButtonContianer, expectedValue: expectedTreasure)
+        XCTAssertEqual(gameTreasureValue, expectedTreasure, "Expected to find a tile with value \(expectedTreasure)")
+        
+        //Chekc number of treasure
+        XCTAssertEqual(numberOfTreasures, expectedNumberOfTreasures, "Expected to find treasuers a tile with value \(expectedNumberOfTreasures)")
+        
+        
+        //Chekc number of bonus
+        let expectedBonusSymbol = "bitcoinsign.circle"
+        let (gameBonusValue, numberOfBonuses) = foundValue(query: tileButtonContianer, expectedValue: expectedBonusSymbol)
+        XCTAssertEqual(gameBonusValue, expectedBonusSymbol, "Expected to find a tile with value \(expectedBonusSymbol)")
+        XCTAssertEqual(numberOfBonuses, expectedNumberOfBonus, "Expected to find \(expectedNumberOfBonus) bonus a tile.")
+        
+        
+        
+        // Set the default setting
+        gearButton.tap()
+        defaultSetting(app: app, nextImageButton: nextImgBtn,decrementStepperButton: decrementStepper, currentImageIndexValue: String(currentImageIndex), currentBonusToggleValue: currentBonusValue, currentStepperValue: currentStepperVal )
+        
+        
+    }
     
 }
