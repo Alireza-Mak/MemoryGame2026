@@ -300,7 +300,7 @@ final class MemoryGame2026UITests: XCTestCase {
         //Store the default and current value of bonus toggle
         let bonusToggle = app.switches["SettingsBonusToggle"]
         XCTAssertTrue(bonusToggle.waitForExistence(timeout: 1.0), "Toggle button should exist")
-
+        
         let defaultBounsToggleVal = bonusToggle.value as! String
         var currentBounsToggleVal = defaultBounsToggleVal
         
@@ -385,6 +385,7 @@ final class MemoryGame2026UITests: XCTestCase {
     @MainActor
     func testSettingsReflectedInGameView() throws {
         let images = ["sun.max", "cloud.sun", "cloud.rain"]
+        let expectedBonusSymbol = "bitcoinsign.circle"
         
         //Open the app
         let app = XCUIApplication()
@@ -398,7 +399,7 @@ final class MemoryGame2026UITests: XCTestCase {
         let nextImgBtn = app.buttons["NextImage"]
         nextImgBtn.tap()
         let currentImageIndex = Int(nextImgBtn.value as! String)!
-        let expectedTreasure = images[currentImageIndex]
+        let expectedTreasureSymbol = images[currentImageIndex]
         
         //Make bonus availabe for the game in Setting page
         let bonusToggle = app.switches["SettingsBonusToggle"]
@@ -432,17 +433,94 @@ final class MemoryGame2026UITests: XCTestCase {
         XCTAssertEqual(numberOfTiles, expectedNumberOfTiles)
         
         //Check the value of treasure
-        let (gameTreasureValue, numberOfTreasures) = foundValue(query: tileButtonContianer, expectedValue: expectedTreasure)
-        XCTAssertEqual(gameTreasureValue, expectedTreasure, "Expected to find a tile with value \(expectedTreasure)")
+        let (gameTreasureValue, numberOfTreasures) = foundValue(query: tileButtonContianer, expectedValue: expectedTreasureSymbol)
+        XCTAssertEqual(gameTreasureValue, expectedTreasureSymbol, "Expected to find a tile with value \(expectedTreasureSymbol)")
         
         //Check number of treasure
         XCTAssertEqual(numberOfTreasures, expectedNumberOfTreasures, "Expected to find treasuers a tile with value \(expectedNumberOfTreasures)")
         
         //Check number of bonus
-        let expectedBonusSymbol = "bitcoinsign.circle"
         let (gameBonusValue, numberOfBonuses) = foundValue(query: tileButtonContianer, expectedValue: expectedBonusSymbol)
         XCTAssertEqual(gameBonusValue, expectedBonusSymbol, "Expected to find a tile with value \(expectedBonusSymbol)")
         XCTAssertEqual(numberOfBonuses, expectedNumberOfBonus, "Expected to find \(expectedNumberOfBonus) bonus a tile.")
+        
+        // Navigate to Setting View
+        gearButton.tap()
+        
+        // Navigate to Game View
+        houseButton.tap()
+        
+        //Wait for 5 seconds
+        sleep(5)
+        
+        // Get the tap counter/ treasure counter/ unrevealed treasure counter
+        let tapCounter = app.staticTexts["tapCounter"].firstMatch
+        XCTAssertTrue(tapCounter.waitForExistence(timeout: 1.0), "tapCounter should exist")
+        
+        let treasureCounter = app.staticTexts["treasureCounter"].firstMatch
+        XCTAssertTrue(treasureCounter.waitForExistence(timeout: 1.0), "treasureCounter should exist")
+        
+        let unreavealTreasureCounter = app.staticTexts["unreavealTreasureCounter"].firstMatch
+        XCTAssertTrue(unreavealTreasureCounter.waitForExistence(timeout: 1.0), "unreavealTreasureCounter should exist")
+        
+        
+        var valTapCounter = Int(tapCounter.value as! String)
+        XCTAssertEqual(valTapCounter, 0)
+        
+        var valTreasureCounter = Int(treasureCounter.value as! String)
+        XCTAssertEqual(valTreasureCounter, 0)
+        
+        var valUnreavealTreasure = Int(unreavealTreasureCounter.value as! String)
+        XCTAssertEqual(valUnreavealTreasure, expectedNumberOfTreasures)
+        
+        var expectedTaps = 0
+        var expectedTreasures = 0
+        var expectedUnrevealTreasures = expectedNumberOfTreasures
+        var positionOfBonusTile: Int!
+        
+        for i in 0..<numberOfTiles {
+            let clickedBtn = tileButtonContianer.element(boundBy: i)
+            // Click on a tile
+            clickedBtn.tap()
+            
+            //Get the value of the tile
+            let valClickedBtn = clickedBtn.value as! String
+            
+            if valClickedBtn == expectedBonusSymbol
+            {
+                expectedTaps = 0
+                
+                positionOfBonusTile = i
+            }
+            else{
+                expectedTaps += 1
+            }
+            
+            expectedTreasures = valClickedBtn == expectedTreasureSymbol ? expectedTreasures + 1 : expectedTreasures
+            expectedUnrevealTreasures = valClickedBtn != expectedTreasureSymbol ? expectedUnrevealTreasures : expectedUnrevealTreasures - 1
+            
+            
+            // Check the tap counter
+            valTapCounter = Int(tapCounter.value as! String)
+            XCTAssertEqual(valTapCounter, expectedTaps)
+            
+            // Check treasures counter
+            valTreasureCounter = Int(treasureCounter.value as! String)
+            XCTAssertEqual(valTreasureCounter, expectedTreasures)
+            
+            // Check unrevealed treasures counter
+            valUnreavealTreasure = Int(unreavealTreasureCounter.value as! String)
+            XCTAssertEqual(valUnreavealTreasure, expectedUnrevealTreasures)
+        }
+        
+        //Make sure after taping on bonus tile once, the second time does not affect the value of tap counter
+        tileButtonContianer.element(boundBy: positionOfBonusTile).tap()
+        // Check the tap counter
+        valTapCounter = Int(tapCounter.value as! String)
+        XCTAssertEqual(valTapCounter, expectedTaps)
+        
+        
+        
         
         // Set the default setting
         gearButton.tap()

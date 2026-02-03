@@ -68,18 +68,23 @@ struct GameView: View {
                 }
                 .padding()
             }
-            
+        
             Spacer()
             
             Text("Tap counter: \(board.tapCount) ")
+                .accessibilityIdentifier("tapCounter")
+                .accessibilityValue("\(board.tapCount)")
             
             Text("Treasures found: \(board.treasureCount)")
-            // Shows remaining unrevealed treasures
+                .accessibilityIdentifier("treasureCounter")
+                .accessibilityValue("\(board.treasureCount)")
+            
             Text("Unreveal treasures: \(board.unrevealedTreasureCount())")
+                .accessibilityIdentifier("unreavealTreasureCounter")
+                .accessibilityValue("\(board.unrevealedTreasureCount())")
         }
         .padding()
         .onAppear {
-            // Start a one-time preview window: reveal all tiles briefly, then hide them and enable play.
             Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { _ in
                 isInitiallyShowingBoard.toggle()
             }
