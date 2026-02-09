@@ -14,7 +14,7 @@ import SwiftUI
 /// a navigation stack with a single toolbar button to switch modes.
 struct ContentView: View {
     /// Available SF Symbol names for selection.
-    private static let images: [String] = ["sun.max", "cloud.sun", "cloud.rain"]
+    private static let images: [String] = ["sun.max", "cloud.sun", "cloud.rain", "cloud"]
     /// Persisted index of the selected symbol.
     @AppStorage("index") private var index: Int = 0
     /// Persisted board size (number of rows/columns).
@@ -27,29 +27,34 @@ struct ContentView: View {
     
     /// Renders the main navigation and switches between SettingsView and GameView.
     var body: some View {
-        NavigationStack {
-            Group {
-                if showingSettings {
-                    SettingsView(bonus: $bonus, index: $index, step: $step, images: Self.images)
-                } else {
-                    GameView(
-                        name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark",
-                        boardSize: step,
-                        bonus: bonus
-                    )
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingSettings.toggle()
-                    } label: {
-                        Image(systemName: showingSettings ? "house" : "gear")
-                            .font(.title2)
-                    }
-                }
-            }
-        }
+//        NavigationStack {
+//            Group {
+//                if showingSettings {
+//                    SettingsView(bonus: $bonus, index: $index, step: $step, images: Self.images)
+//                } else {
+//                    GameView(
+//                        name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark",
+//                        boardSize: step,
+//                        bonus: bonus
+//                    )
+//                }
+//            }
+//            .toolbar {
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    Button {
+//                        showingSettings.toggle()
+//                    } label: {
+//                        Image(systemName: showingSettings ? "house" : "gear")
+//                            .font(.title2)
+//                    }
+//                }
+//            }
+//        }
+        GameView(
+            name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark",
+            boardSize: step,
+            bonus: bonus
+        )
     }
 }
 
