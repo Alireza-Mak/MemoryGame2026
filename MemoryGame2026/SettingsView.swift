@@ -23,6 +23,7 @@ struct SettingsView: View {
     
     /// Renders controls for symbol selection, board size, and bonus mode.
     var body: some View {
+        #if os(iOS)
         VStack(spacing: 20) {
             ImagePickerView(index: $index, images: images)
             Stepper(value: $step, in: 5...10) {
@@ -36,6 +37,13 @@ struct SettingsView: View {
                 .accessibilityIdentifier("SettingsBonusToggle")
         }
         .padding(25)
+        #endif
+        #if os(watchOS)
+        VStack() {
+            ImagePickerView(index: $index, images: images)
+            Toggle("Bonus", isOn: $bonus)
+        }
+#endif
     }
 }
 

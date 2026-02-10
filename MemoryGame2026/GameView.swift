@@ -36,7 +36,12 @@ struct GameView: View {
     ///   - bonus: Enables bonus behavior in the underlying `Board`.
     init(name: String, boardSize: Int, bonus: Bool) {
         self.name = name
+#if os(iOS)
         self.boardSize = boardSize
+#endif
+#if os(watchOS)
+        self.boardSize = 5
+#endif
         self.bonus = bonus
         self.board = Board(size: boardSize, treasureSymbol: name, hasBonus: bonus)
     }
@@ -68,7 +73,7 @@ struct GameView: View {
                 }
                 .padding()
             }
-        
+#if os(iOS)
             Spacer()
             
             Text("Tap counter: \(board.tapCount) ")
@@ -82,6 +87,12 @@ struct GameView: View {
             Text("Unreveal treasures: \(board.unrevealedTreasureCount())")
                 .accessibilityIdentifier("unreavealTreasureCounter")
                 .accessibilityValue("\(board.unrevealedTreasureCount())")
+#endif
+#if os(watchOS)
+            Text("Picks: \(board.treasureCount) Left: \(board.unrevealedTreasureCount())")
+                .font(.system(size: 16, weight: .light, design: .serif))
+                .italic()
+#endif
         }
         .padding()
         .onAppear {

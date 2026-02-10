@@ -17,45 +17,60 @@ struct ImagePickerView: View {
     let images: [String]
     /// Renders a horizontal layout with previous/next controls and the selected symbol.
     /// Includes accessibility labels, identifiers, and values for UI testing and VoiceOver.
-    
+#if os(watchOS)
+    var space = 0.0
+    var imageWidth = 80.0
+    var arrowColors = Color.white
+#endif
+#if os(iOS)
+    var space = 70.0
+    var imageWidth = 150.0
+    var arrowColors = Color.blue
+#endif
     
     var body: some View {
-        HStack(spacing: 70) {
+        HStack(spacing: space) {
             Button(action: showPrevious) {
                 Image(systemName: "arrowtriangle.left.fill")
                     .resizable()
                     .symbolRenderingMode(.hierarchical)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 40, height: 40)
             }
             .accessibilityLabel("Previous image")
             .accessibilityIdentifier("PrevImage")
             .buttonStyle(.plain)
-            .foregroundStyle(.tint)
+            .foregroundStyle(arrowColors)
             .accessibilityValue(String(index))
-            
+#if os(watchOS)
+            Spacer()
+#endif
             Image(systemName: images.indices.contains(index) ? images[index] : images.first ?? "questionmark")
                 .resizable()
                 .symbolRenderingMode(.monochrome)
                 .aspectRatio(contentMode: .fit)
                 .foregroundStyle(.primary)
-                .frame(width: 150, height: 150)
+                .frame(width: imageWidth, height: imageWidth)
                 .accessibilityLabel(images.indices.contains(index) ? images[index] : (images.first ?? "Image"))
                 .accessibilityIdentifier("targetImage")
                 .accessibilityValue(images.indices.contains(index) ? images[index] : (images.first ?? "Image"))
+            
+#if os(watchOS)
+            Spacer()
+#endif
             
             Button(action: showNext) {
                 Image(systemName: "arrowtriangle.right.fill")
                     .resizable()
                     .symbolRenderingMode(.hierarchical)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 40, height: 40)
             }
             .accessibilityLabel("Next image")
             .accessibilityIdentifier("NextImage")
             .accessibilityValue(String(index))
             .buttonStyle(.plain)
-            .foregroundStyle(.tint)
+            .foregroundStyle(arrowColors)
         }
     }
     

@@ -74,10 +74,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2E123A272F3533DB008625A7 /* Exceptions for "MemoryGame2026" folder in "MemoryGameWatch2026 Watch App" target */ = {
+		F3A4D3302F3AA36A00B06753 /* Exceptions for "MemoryGameWatch2026 Watch App" folder in "MemoryGame2026" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Settings.bundle,
+				MemoryGameWatch2026App.swift,
+			);
+			target = F3C512E72F103EA80060DEAA /* MemoryGame2026 */;
+		};
+		F3A4D3312F3AA37B00B06753 /* Exceptions for "MemoryGame2026" folder in "MemoryGameWatch2026 Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				MemoryGame2026App.swift,
 			);
 			target = 2E1239F52F352247008625A7 /* MemoryGameWatch2026 Watch App */;
 		};
@@ -86,6 +93,9 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2E1239F72F352247008625A7 /* MemoryGameWatch2026 Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F3A4D3302F3AA36A00B06753 /* Exceptions for "MemoryGameWatch2026 Watch App" folder in "MemoryGame2026" target */,
+			);
 			path = "MemoryGameWatch2026 Watch App";
 			sourceTree = "<group>";
 		};
@@ -102,7 +112,7 @@
 		F3C512EA2F103EA80060DEAA /* MemoryGame2026 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				2E123A272F3533DB008625A7 /* Exceptions for "MemoryGame2026" folder in "MemoryGameWatch2026 Watch App" target */,
+				F3A4D3312F3AA37B00B06753 /* Exceptions for "MemoryGame2026" folder in "MemoryGameWatch2026 Watch App" target */,
 			);
 			path = MemoryGame2026;
 			sourceTree = "<group>";
@@ -209,6 +219,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				2E1239F72F352247008625A7 /* MemoryGameWatch2026 Watch App */,
+				F3C512EA2F103EA80060DEAA /* MemoryGame2026 */,
 			);
 			name = "MemoryGameWatch2026 Watch App";
 			packageProductDependencies = (
@@ -278,6 +289,7 @@
 				2E123A152F352248008625A7 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				2E1239F72F352247008625A7 /* MemoryGameWatch2026 Watch App */,
 				F3C512EA2F103EA80060DEAA /* MemoryGame2026 */,
 			);
 			name = MemoryGame2026;

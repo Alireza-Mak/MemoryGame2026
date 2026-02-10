@@ -27,34 +27,52 @@ struct ContentView: View {
     
     /// Renders the main navigation and switches between SettingsView and GameView.
     var body: some View {
-//        NavigationStack {
-//            Group {
-//                if showingSettings {
-//                    SettingsView(bonus: $bonus, index: $index, step: $step, images: Self.images)
-//                } else {
-//                    GameView(
-//                        name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark",
-//                        boardSize: step,
-//                        bonus: bonus
-//                    )
-//                }
-//            }
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Button {
-//                        showingSettings.toggle()
-//                    } label: {
-//                        Image(systemName: showingSettings ? "house" : "gear")
-//                            .font(.title2)
-//                    }
-//                }
-//            }
-//        }
+#if os(iOS)
+        //                NavigationStack {
+        //                    Group {
+        //                        if showingSettings {
+        //                            SettingsView(bonus: $bonus, index: $index, step: $step, images: Self.images)
+        //                        } else {
+        //                            GameView(
+        //                                name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark",
+        //                                boardSize: step,
+        //                                bonus: bonus
+        //                            )
+        //                        }
+        //                    }
+        //                    .toolbar {
+        //                        ToolbarItem(placement: .navigationBarTrailing) {
+        //                            Button {
+        //                                showingSettings.toggle()
+        //                            } label: {
+        //                                Image(systemName: showingSettings ? "house" : "gear")
+        //                                    .font(.title2)
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        
+        
         GameView(
             name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark",
             boardSize: step,
             bonus: bonus
         )
+#endif
+        
+#if os(watchOS)
+        TabView {
+            WatchGameView(bonus: bonus, selectedImage: Self.images[index])
+                .id("game-\(bonus)-\(index)")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .tag(0)
+            SettingsView(bonus: $bonus, index: $index, step: $step, images: Self.images)
+            //            WatchSettingsView(bonus: $bonus, selectedImageIndex: $index, images: Self.images)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .tag(1)
+        }
+        .tabViewStyle(.verticalPage)
+#endif
     }
 }
 
