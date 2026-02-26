@@ -61,7 +61,9 @@ struct GameView: View {
                         }){
                             Image(systemName: symbolName)
                                 .resizable()
-                                .aspectRatio(contentMode:.fit)
+#if os(iOS)
+                                .aspectRatio(contentMode: .fit)
+#endif
                                 .accessibilityLabel("tile")
                                 .accessibilityIdentifier("GameImage")
                                 .accessibilityValue(symbolName)
@@ -69,9 +71,15 @@ struct GameView: View {
                         .disabled(isInitiallyShowingBoard)
                         .accessibilityIdentifier("GameButton")
                         .accessibilityValue(symbolName)
+#if os(watchOS)
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.white)
+#endif
                     }
                 }
-                .padding()
+#if os(iOS)
+              .padding()
+#endif
             }
 #if os(iOS)
             Spacer()

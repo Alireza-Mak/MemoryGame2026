@@ -62,12 +62,11 @@ struct ContentView: View {
         
 #if os(watchOS)
         TabView {
-            WatchGameView(bonus: bonus, selectedImage: Self.images[index])
+            GameView(name: Self.images.indices.contains(index) ? Self.images[index] : Self.images.first ?? "questionmark", boardSize: step, bonus: bonus)
                 .id("game-\(bonus)-\(index)")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
                 .tag(0)
             SettingsView(bonus: $bonus, index: $index, step: $step, images: Self.images)
-            //            WatchSettingsView(bonus: $bonus, selectedImageIndex: $index, images: Self.images)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .tag(1)
         }
